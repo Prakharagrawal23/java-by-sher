@@ -1,0 +1,52 @@
+// client side code
+import java.net.*;
+import java.io.*;
+
+public class client {
+    // initialize the socket and the input and output stream 
+    private Socket socket = null;
+    private DataInputStream input = null;
+    private DataOutputStream out = null;
+
+    // create the constructor to put ip address and port
+    @SuppressWarnings("deprecation")
+    public client(String address,int port){
+        // estabish the connection
+        try {
+            socket  = new Socket(address,port);
+            System.out.println("connected");
+
+            // take input from terminal
+            input = new DataInputStream(System.in);
+        
+            // send out to socket 
+            out = new DataOutputStream(socket.getOutputStream());
+        } catch (UnknownHostException e) {
+            System.out.println(e);
+        } catch(IOException o){
+            System.out.println(o);
+        }
+
+        //string to read msg from imput 
+        String line = "";
+        while (!line.equals("Over")) {
+                try  {
+                    line = input.readLine();
+                    out.writeUTF(line);
+                } catch (IOException u) {
+                    System.out.println(u);
+                }
+        }
+        try {
+            input.close();
+            out.close();
+            socket.close();
+        } catch (IOException i) {
+            System.out.println(i);
+        }
+    }
+    public static void main(String[] args) {
+        client client = new client("127.0.0.1", 5000);
+    }
+
+}
